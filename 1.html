@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>friends</title>
+<style type="text/css">
+	#outside{
+		width:700px;
+		height: 900px;
+		background:#fbcbc1;
+		margin: auto;
+		border-radius: 10px;
+	}
+	#box{
+	background-color:#fbcbc1;
+	width:600px;
+	height: 700px;
+	margin: auto;
+	border-radius: 10px;
+	border:2px white solid;
+	overflow-x: none;
+    overflow-y: auto;
+}
+	#box div{
+	width: 180px;
+    height: 80px;
+    float: left;
+    background-color:#d9767f;
+    margin-top: 10px;
+    margin-left: 15px;
+    text-align: center;
+    line-height: 80px;
+    font-size: 20px;
+    border: 1px #e98b90 solid;
+    border-radius: 10px;
+}
+	#box div input{
+	width:80%;
+	height:80%;
+}
+	.btn{
+	position: relative;
+	width:110px;
+    display: inline-block;
+    cursor: pointer;
+    border: 0;
+	border-radius: 10px;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+	top:40px;
+	}
+	#luck{
+    background-color:#F5EBF9;
+	width: 400px;
+    height: 200px;
+    position: absolute;
+	border-radius: 10px;
+    top: -200px;
+    left: 50%;
+    margin-left: -200px;
+    text-align: center;
+    transition: all 1s ease-out 0s;
+    z-index: 99;
+	}
+	#luck h2{
+    color: black;
+	margin-top:70px;
+}
+    #luck input{
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    vertical-align: bottom;
+    text-decoration: none;
+    font-size: 16px;
+    color:black;
+    border: 1px solid #a95d6a;
+    padding: 10px 20px;
+    transition: all 1s linear 0s;
+    background: #f3b1bd;
+    }
+    #luck input:hover{
+    border: 2px solid #85A5CC;
+    border-radius: 20px;
+    font-weight: 700;
+    transform: scale(1.5);
+    color: BLACK;
+}
+	#btn1{
+	background-color:#F4FB6A;
+    left:80px;
+}
+    #btn2{
+	background-color:darkseagreen;
+	left:110px;
+}
+    #btn3{
+	background-color:#F05C5F;
+	left:150px;
+}
+	#btn4{
+	background-color:grey;
+	left:190px;	
+	}
+	.light{
+	box-shadow: 0 0 10px 5px pink;
+    transform: scale(1.2);
+    color: pink;
+}
+	#Image1{
+	    width:4%;
+		position:absolute;
+		top:50px;
+		left: 1100px;	
+	}
+	#Image2{
+		width:4%;
+		position:absolute;
+		top:50px;
+		left: 1200px;
+	}
+	
+	img:hover{
+		cursor: pointer;
+	}
+	#Image3{
+		position: absolute;
+		left:350px;
+		top:700px;
+		z-index: -99;
+		border-radius: 20px;
+	}
+</style>
+</head>
+
+<body>
+	<div id="outside">
+	<h1 style="position: relative; width:800px;padding: 50px 0 0 0;left: 270px">心有灵犀</h1>
+	<abbr title="戳我重新开始"><img id="Image1" src="restart.png" alt="restart" onClick="location='index.html'"></abbr>
+	<abbr title="戳我看规则"><img  id="Image2" src="help.png" alt="help" onClick="Help()"></abbr>
+	<img id="Image3" src="cat2.gif">
+	<div id="mask"></div>
+	<div id="box">
+	<div>喜欢的颜色</div>
+	<div>喜欢的食物</div>
+	<div>喜欢的明星</div>
+	<div>讨厌的行为</div>
+	<div>喜欢的电影</div>
+	<div>每天要做的事</div>
+	</div>
+	<button class="btn" id="btn1" onClick="Start()">开始</button>
+	<button class="btn" id="btn2" onClick="Add()">添加</button>
+	<button class="btn" id="btn3" onClick="Remove()">删除</button>
+	<button class="btn" id="btn4" onClick="location='2.html'">下一关</button>
+	<div id="luck">
+	<h2></h2>
+    <input type="button" value="ok" id="bbt">
+    </div></div>
+	<script>
+	var box=document.getElementById('box');
+	var btn1=document.getElementById('btn1');
+	var btn2=document.getElementById('btn2');
+	var btn3=document.getElementById('btn3');
+	var mask=document.getElementById('mask');
+	var luck=document.getElementById('luck');
+	var bbt=document.getElementById('bbt');
+    var divs=box.getElementsByTagName('div');
+    var k=[ ];//创建一个数组用于记录选中的词汇
+        for(var i=0;i<divs.length;i++){//给每个div绑定双击事件
+            divs[i].index=i;//记录每个div的索引
+            divs[i].ondblclick=edit;
+        }
+        var html;
+        var t=0;
+        function type() {//把结果像打字效果一样输出
+            if (t <= html.length) {
+                luck.children[0].innerText = html.substring(0, t++);
+                setTimeout(type, 200);
+            }
+            else{
+                t=0;
+            }
+        }
+        function Start(){
+            btn1.disabled=true;//避免重复点击
+            btn2.disabled=true;
+            btn3.disabled=true;
+            var cut=setInterval(toggle,100);//开始抽选
+            setTimeout(function(){
+                clearInterval(cut);
+                var l=document.querySelector('.light');
+                k.push(l.index);//记录被选的下标
+                luck.style="top: 200px;";
+                html='对方'+l.innerText+'是？';
+                type();
+                btn1.disabled=false;//恢复按钮的点击
+                btn2.disabled=false;
+                btn3.disabled=false;
+            },2000);
+        }
+        bbt.onclick=function(){
+            luck.style="top: -200px;";
+        }
+        var j;
+        function toggle(){
+            for(var i=0;i<divs.length;i++){
+                    divs[i].className="";
+            }
+            j=Math.floor(Math.random()*divs.length);//取随机数
+            var q = k.some(value=>{//查询是否存在一样的值
+                return value==j;
+                });
+                if(q){
+                if(k.length>=divs.length){//判断所有词汇是否被抽过
+                    alert("所有选项都被选过啦，加点内容试试！");
+                    k=[];//清空记录的数组
+                }
+                toggle();//存在一样的值就再取一次
+                }else
+                divs[j].className="light";//被选中的词汇保持高亮
+        }
+        
+        function edit(){//div内容编辑功能
+            var str = this.innerHTML;
+            this.innerHTML = '<input type="text" />';
+            var input = this.children[0];
+            input.value = str;
+            input.select();//默认全选中
+            input.onblur=function(){//失去焦点后改变div的值
+                this.parentNode.innerText=this.value;
+            }
+        }
+	    
+        function Add(){//添加div功能
+            var div=document.createElement('div');
+            div.innerText="双击可改";
+            box.appendChild(div);
+            //添加div后重新获取div的数量以及给它绑定双击事件
+            divs=box.getElementsByTagName('div');
+            for(var i=0;i<divs.length;i++){
+                divs[i].index=i;
+                divs[i].ondblclick=edit;
+            }
+        }
+		
+        function Remove(){//删除div功能
+            divs[divs.length-1].remove();
+            //添加div后重新获取div的数量以及给它绑定双击事件
+            divs=box.getElementsByTagName('div');
+            for(var i=0;i<divs.length;i++){
+                divs[i].index=i;
+                divs[i].ondblclick=edit;
+            }
+        }
+		function Help(){//跳出弹窗，游戏规则提示
+			alert('点击\"开始\"即可随机选取卡片，进行问题回答哦！\n你可以自主\"添加\"卡片内容，也可以\"删除\"卡片内容。\n如果完成了这关就进行下一关吧！')
+		}
+	</script>
+</body>
+</html>
